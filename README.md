@@ -1,6 +1,7 @@
 # Spring-security from a-z
 ### Unprotected Application
-Uses Java 17
+Uses Java 17  
+Follow commit steps to understand the flow 
 ```
 ./gradlew bootrun
 ```
