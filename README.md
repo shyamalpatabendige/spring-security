@@ -1,7 +1,12 @@
 # Spring-security from a-z
 ### Unprotected Application
 Uses Java 17  
-Follow commit steps to understand the flow 
+Follow commit steps to understand the flow.
+
+#### Create Client id and secrete in GCP
+
+
+#### Run the Application
 ```
 ./gradlew bootrun
 ```

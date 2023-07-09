@@ -24,6 +24,7 @@ public class SecurityConfig {
                     authConfig.anyRequest().authenticated();
                 })
                 .formLogin(Customizer.withDefaults())
+                .oauth2Login(Customizer.withDefaults())
                 .build();
     }
 
