@@ -18,8 +18,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests(authConfig -> {
-                    authConfig.antMatchers("/secured").authenticated();
-                    authConfig.anyRequest().permitAll();
+                    authConfig.antMatchers("/").permitAll();
+                    authConfig.antMatchers("/error").permitAll();
+                    authConfig.antMatchers("/favicon.ico").permitAll();
+                    authConfig.anyRequest().authenticated();
                 })
                 .formLogin(Customizer.withDefaults())
                 .build();

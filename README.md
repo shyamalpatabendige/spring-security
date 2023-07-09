@@ -8,5 +8,6 @@ Follow commit steps to understand the flow
 #### Access below URL  
 http://localhost:8080/  
 http://localhost:8080/secured
+http://localhost:8080/ogout  
 
 Both URLs are accessible without Login
