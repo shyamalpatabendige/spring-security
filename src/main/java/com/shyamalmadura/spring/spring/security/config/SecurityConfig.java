@@ -2,9 +2,13 @@ package com.shyamalmadura.spring.spring.security.config;
 
 import com.shyamalmadura.spring.spring.security.authentication.CustomAuthenticationProvider;
 import com.shyamalmadura.spring.spring.security.filter.CustomFilter;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationEventPublisher;
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -18,7 +22,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            AuthenticationEventPublisher publisher
+    ) throws Exception {
+        // Will be removed with Spring 5.8x and simplified
+        http.getSharedObject(AuthenticationManagerBuilder.class)
+                .authenticationEventPublisher(publisher);
+
         return http
                 .authorizeRequests(authConfig -> {
                     authConfig.antMatchers("/").permitAll();
@@ -35,12 +46,21 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return  new InMemoryUserDetailsManager(
+        return new InMemoryUserDetailsManager(
                 User.builder()
                         .username("user")
                         .password("{noop}password") // pain text password
                         .authorities("ROLE_user")
                         .build()
         );
+    }
+
+    @Bean
+    public ApplicationListener<AuthenticationSuccessEvent> successEvent() {
+        return event -> {
+            System.out.println(String.format("🎉 SUCCESS [%s] %s",
+                    event.getAuthentication().getClass().getSimpleName(),
+                    event.getAuthentication().getName()));
+        };
     }
 }
