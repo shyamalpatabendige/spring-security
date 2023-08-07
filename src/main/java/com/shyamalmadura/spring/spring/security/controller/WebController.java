@@ -17,6 +17,7 @@ public class WebController {
 
     @GetMapping("/secured")
     public String securedPage(Authentication authentication) {
+        // SecurityContextHolder.getContext().getAuthentication(); //Has Access to security context throughout the Thread - ThreadLocal
         return "Hello [" +
                 getName(authentication)
                 + "], you are allowed to access this page";
