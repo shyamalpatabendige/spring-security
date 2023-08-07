@@ -21,6 +21,9 @@ http://localhost:8080/logout
 ```shell
  curl localhost:8080/secured -H "x-custom-password: cx-pword" -v 
  ```
+```shell
+ curl localhost:8080/secured -H "x-custom-password: cx-passwd" -v 
+ ```
 ##### Failed
 ```shell
  curl localhost:8080/secured -H "x-custom-password: cx-pword-123" -v 

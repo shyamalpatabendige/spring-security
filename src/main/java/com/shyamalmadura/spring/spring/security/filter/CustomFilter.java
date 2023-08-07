@@ -2,6 +2,9 @@ package com.shyamalmadura.spring.spring.security.filter;
 
 import com.shyamalmadura.spring.spring.security.authentication.CustomAuthentication;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -15,6 +18,12 @@ import java.util.Collections;
 public class CustomFilter extends OncePerRequestFilter {
 
     private static final String HEADER_NAME = "x-custom-password";
+
+    private final AuthenticationManager authenticationManager;
+
+    public CustomFilter(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -30,18 +39,21 @@ public class CustomFilter extends OncePerRequestFilter {
 
         // 1. Authentication Decision
         var password = request.getHeader(HEADER_NAME);
-        if (!"cx-pword".equals(password)) {
+        var authRequest = CustomAuthentication.unAuthenticated(password);
+
+        try {
+            //OK 👍
+            var authentication = authenticationManager.authenticate(authRequest);
+            var newContext = SecurityContextHolder.createEmptyContext();
+            newContext.setAuthentication(authentication);
+            SecurityContextHolder.setContext(newContext);
+            filterChain.doFilter(request, response);
+        } catch (AuthenticationException ae) {
             //KO 👎
             response.setStatus(HttpStatus.FORBIDDEN.value());
             response.setCharacterEncoding("utf-8");
             response.setHeader("Content-type", "text/plain;charset=utf-8");
-            response.getWriter().println("You are not Mr. Custom 😎 🛑");
-        } else {
-            //OK 👍
-            var newContext = SecurityContextHolder.createEmptyContext();
-            newContext.setAuthentication(new CustomAuthentication());
-            SecurityContextHolder.setContext(newContext);
-            filterChain.doFilter(request, response);
+            response.getWriter().println(ae.getMessage());
         }
     }
 }
