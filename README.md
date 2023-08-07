@@ -1,9 +1,9 @@
 # Spring-security from a-z
-### Unprotected Application
-Uses Java 17  
-Follow commit steps to understand the flow.
-
-#### Create Client id and secrete in GCP
+### Protected Application
+#### _Notes_
+- Uses Java 17  
+- Follow commit steps to understand the flow.
+-[Create Client id and secrete in GCP]: (https://support.google.com/cloud/answer/6158849?hl=en)
 
 
 #### Run the Application
@@ -12,7 +12,19 @@ Follow commit steps to understand the flow.
 ```
 #### Access below URL  
 http://localhost:8080/  
-http://localhost:8080/secured
-http://localhost:8080/ogout  
+http://localhost:8080/secured  
+http://localhost:8080/logout
 
-Both URLs are accessible without Login
+
+#### Test Custom filter
+##### Success
+```shell
+ curl localhost:8080/secured -H "x-custom-password: cx-pword" -v 
+ ```
+##### Failed
+```shell
+ curl localhost:8080/secured -H "x-custom-password: cx-pword-123" -v 
+ ```
+
+## Note
+Unable to access http://localhost:8080/
