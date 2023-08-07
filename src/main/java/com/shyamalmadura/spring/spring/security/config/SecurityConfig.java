@@ -1,5 +1,6 @@
 package com.shyamalmadura.spring.spring.security.config;
 
+import com.shyamalmadura.spring.spring.security.authentication.CustomAuthenticationProvider;
 import com.shyamalmadura.spring.spring.security.filter.CustomFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,9 +26,10 @@ public class SecurityConfig {
                     authConfig.antMatchers("/favicon.ico").permitAll();
                     authConfig.anyRequest().authenticated();
                 })
-                .formLogin(Customizer.withDefaults())
-                .oauth2Login(Customizer.withDefaults())
-                .addFilterBefore(new CustomFilter(), UsernamePasswordAuthenticationFilter.class)
+                .formLogin(Customizer.withDefaults()) // US1
+                .oauth2Login(Customizer.withDefaults()) // US2
+                .addFilterBefore(new CustomFilter(), UsernamePasswordAuthenticationFilter.class) // US3
+                .authenticationProvider(new CustomAuthenticationProvider()) //US4
                 .build();
     }
 
